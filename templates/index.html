@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -142,48 +141,5 @@
     <!-- You can copy and paste more with different `top`, `left`, and `animation-delay` values -->
   </div>
   
-=======
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Real-Time Sentiment Analysis</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-
-</head>
-<body>
-    <!-- <h1>Hello Gaurav!</h1> -->
-    <div class="container">
-        <h1>Real-Time Sentiment Analysis</h1>
-        <div class="input-form">
-            <form id="sentiment-form" action="/analyze" method="POST">
-                <label for="tweet">Enter Something :</label>
-                <textarea name="tweet" rows="4" cols="50"></textarea>
-                <br>
-                <button type="submit">Analyze</button>
-            </form>
-            <div class="result" id="sentiment-result"></div>
-        </div>
-        
-    </div>
-
-    <script>
-        function getTweets() {
-            fetch('/get_tweets')
-                .then(response => response.json())
-                .then(data => {
-                    let tweetList = document.getElementById('tweet-list');
-                    tweetList.innerHTML = '';  // Clear previous tweets
-                    data.forEach(tweet => {
-                        let listItem = document.createElement('li');
-                        listItem.className = 'tweet-item';
-                        listItem.innerHTML = `<strong>Tweet:</strong> ${tweet.text}<br><strong>Sentiment:</strong> ${tweet.sentiment}<br><br>`;
-                        tweetList.appendChild(listItem);
-                    });
-                });
-        }
-
-        setInterval(getTweets, 30000);  // Fetch new tweets every 30 seconds
-    </script>
->>>>>>> a4ed8ab (initial files)
 </body>
 </html>
