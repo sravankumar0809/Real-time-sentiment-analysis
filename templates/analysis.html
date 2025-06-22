@@ -1,15 +1,272 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Add any additional CSS styles specific to the /analysis page here -->
+  <meta charset="UTF-8" />
+  <title>Analysis Result</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 40px;
+      color: #ffffff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    strong {
+      color: #6d40fe;
+    }
+
+    .positive {
+      color: #4caf50;
+    }
+
+    .negative {
+      color: #f44336;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 16px;
+      color: #6d40fe;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Grids for graphs */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    .charts-grid div {
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+      max-width: 100%;
+      animation: fadeIn 2s forwards;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .container {
+        margin-bottom: 60px; /* Increase gap at the bottom for mobile view */
+      }
+    }
+
+    .new-graph {
+      margin: 20px;
+    }
+
+    /* Ensure full screen usage */
+    html, body {
+      height: 100%;
+    }
+
+    .content {
+      flex-grow: 1; /* This allows the content to take up remaining space */
+      padding-bottom: 40px; /* Add some space at the bottom */
+    }
+
+  </style>
 </head>
 <body>
+  <h1>Sentiment Analysis Summary</h1>
+  <div class="content">
     <div class="container">
-        <h1 class="analysis_result">Sentiment Analysis Result: 
-            <span class="{% if sentiment == 'Positive' %}positive{% elif sentiment == 'Negative' %}negative{% endif %}">
-               {{ sentiment }}
-            </span></h1>
+      <p><strong>Total Opinions:</strong> {{ total }}</p>
+      <p class="positive"><strong>Positive:</strong> {{ positive }}</p>
+      <p class="negative"><strong>Negative:</strong> {{ negative }}</p>
+      <a href="/" style="margin-top: 20px; display: inline-block;">← Back</a>
     </div>
+
+    <!-- Grids for graphs -->
+    <div class="charts-grid">
+      <div class="new-graph">
+        <h3 style="text-align:center">Bar Graph: Sentiment Count</h3>
+        <canvas id="barChart"></canvas>
+      </div>
+      <div class="new-graph">
+        <h3 style="text-align:center;">Pie Chart: Sentiment Distribution</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="new-graph">
+        <h3 style="text-align:center;">Line Graph: Sentiment Percentage by Opinion Batch</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data to simulate sentiment analysis over batches of 5 opinions
+    const total = {{ total }};
+    const positive = {{ positive }};
+    const negative = {{ negative }};
+    
+    // Simulate sentiment data for every 5 opinions
+    const opinionsPerBatch = 5;
+    const batches = Math.ceil(total / opinionsPerBatch);
+
+    // Calculate percentages for each batch (simulated for demonstration)
+    let positivePercentages = [];
+    let negativePercentages = [];
+    let labels = [];
+
+    for (let i = 0; i < batches; i++) {
+      // Simulated positive and negative percentages for each batch of 5 opinions
+      let batchPositive = Math.floor((Math.random() * 100));
+      let batchNegative = 100 - batchPositive;
+
+      positivePercentages.push(batchPositive);
+      negativePercentages.push(batchNegative);
+      labels.push(`Batch ${i + 1}`);
+    }
+
+    // Bar Chart - Displaying sentiment count
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Positive', 'Negative'],
+        datasets: [{
+          label: 'Opinion Count',
+          data: [positive, negative],
+          backgroundColor: ['#4caf50', '#f44336']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0 }
+          }
+        }
+      }
+    });
+
+    // Line Chart - Sentiment percentage over batches of 5 opinions
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: labels, // X-axis: Batches of opinions
+        datasets: [
+          {
+            label: 'Positive (%)',
+            data: positivePercentages,
+            borderColor: '#4caf50',
+            backgroundColor: '#4caf5040',
+            fill: false,
+            tension: 0.4
+          },
+          {
+            label: 'Negative (%)',
+            data: negativePercentages,
+            borderColor: '#f44336',
+            backgroundColor: '#f4433640',
+            fill: false,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+
+    // Pie Chart - Displaying overall sentiment distribution
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Positive', 'Negative'],
+        datasets: [{
+          label: 'Sentiment Distribution',
+          data: [positive, negative],
+          backgroundColor: ['#4caf50', '#f44336'],
+          borderColor: ['#ffffff', '#ffffff'],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,44 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Real-Time Sentiment Analysis</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentiment AI - Real-Time Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    // JavaScript to check if a file is selected
+    function validateFileUpload(event) {
+      var fileInput = document.getElementById('file-upload');
+      if (!fileInput.files.length) {
+        alert('Please upload a text file before submitting.');
+        event.preventDefault(); // Prevent form submission
+      }
+    }
+  </script>
 </head>
 <body>
-    <!-- <h1>Hello Gaurav!</h1> -->
-    <div class="container">
-        <h1>Real-Time Sentiment Analysis</h1>
-        <div class="input-form">
-            <form id="sentiment-form" action="/analyze" method="POST">
-                <label for="tweet">Enter Something :</label>
-                <textarea name="tweet" rows="4" cols="50"></textarea>
-                <br>
-                <button type="submit">Analyze</button>
-            </form>
-            <div class="result" id="sentiment-result"></div>
-        </div>
-        
+  <!-- Navigation Bar (always at top) -->
+  <nav class="navbar">
+    <div class="logo">Real Time Sentiment Analysis Using AI</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#analyze">Analyze</a></li>
+    </ul>
+  </nav>
+
+  <!-- Home Section -->
+  <section class="home-section" id="home">
+    <div class="home-content">
+      <div class="home-text">
+        <h1>Welcome to Sentiment Analysis Site</h1>
+        <p class="welcome-subtitle">Empowering your insights through emotion-aware AI analysis</p>
+      </div>
+      
+      <div class="home-image">
+        <img src="../static/css/what-is-sentiment-analysis.jpg" alt="Welcome Image">
+      </div>
     </div>
+  </section>
 
-    <script>
-        function getTweets() {
-            fetch('/get_tweets')
-                .then(response => response.json())
-                .then(data => {
-                    let tweetList = document.getElementById('tweet-list');
-                    tweetList.innerHTML = '';  // Clear previous tweets
-                    data.forEach(tweet => {
-                        let listItem = document.createElement('li');
-                        listItem.className = 'tweet-item';
-                        listItem.innerHTML = `<strong>Tweet:</strong> ${tweet.text}<br><strong>Sentiment:</strong> ${tweet.sentiment}<br><br>`;
-                        tweetList.appendChild(listItem);
-                    });
-                });
-        }
+  <!-- Hero Section (Analyze) -->
+  <section class="hero" id="analyze">
+    <div class="hero-content">
+      <h1>Real-Time Sentiment Analysis</h1>
+      <p class="hero-subtitle">
+        <marquee behavior="" direction="left">Sentiment AI uses advanced NLP techniques to analyze and classify emotions in your text data with precision.</marquee>
+      </p>
+      <form action="/analyze" method="POST" enctype="multipart/form-data" class="analysis-form" onsubmit="validateFileUpload(event)">
+        <div class="file-upload-container">
+          <label for="file-upload" class="file-upload-label">
+            <span class="upload-icon">📁</span>
+            <span class="upload-text">Upload your text file</span>
+            <input type="file" id="file-upload" name="file" accept=".txt" required>
+          </label>
+        </div>
+        <button type="submit" class="cta-button">Analyze Now</button>
+      </form>
+    </div>
+  </section>
 
-        setInterval(getTweets, 30000);  // Fetch new tweets every 30 seconds
-    </script>
+  <!-- Features Section -->
+  <section class="section features" id="features">
+    <div class="section-container">
+      <h2>Powerful Features</h2>
+      <p class="section-subtitle">
+        Discover how Sentiment AI can help you extract meaningful insights from textual content
+      </p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Bulk Analysis</h3>
+          <p>Analyze multiple opinions at once with our batch processing capability.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Real-Time Processing</h3>
+          <p>Get instant sentiment classification results as soon as you upload your data.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Weighted Analysis</h3>
+          <p>Our algorithm considers context and linguistic patterns for accurate sentiment scoring.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works Section -->
+  <section class="section how-it-works" id="how-it-works">
+    <div class="section-container">
+      <h2>How It Works</h2>
+      <p class="section-subtitle">
+        Sentiment AI uses a sophisticated process to extract meaningful emotional insights
+      </p>
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Input Your Text</h3>
+          <p>Upload a text file with one opinion per line or paste your content directly.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>NLP Processing</h3>
+          <p>Our algorithm cleans the text and identifies emotional indicators using advanced techniques.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Sentiment Scoring</h3>
+          <p>Each opinion is scored based on linguistic patterns and contextual clues.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Review Results</h3>
+          <p>Examine the classified sentiments in a clean, downloadable format.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 Sentiment AI. All rights reserved.</p>
+  </footer>
+  <div class="starry-background">
+    <!-- 50 Stars -->
+    <span class="star" style="top:10%; left:20%; animation-delay: 0s;"></span>
+    <span class="star" style="top:15%; left:70%; animation-delay: 1s;"></span>
+    <span class="star" style="top:25%; left:40%; animation-delay: 2s;"></span>
+    <span class="star" style="top:35%; left:80%; animation-delay: 0.5s;"></span>
+    <span class="star" style="top:45%; left:10%; animation-delay: 1.2s;"></span>
+    <span class="star" style="top:55%; left:50%; animation-delay: 2.3s;"></span>
+    <span class="star" style="top:65%; left:90%; animation-delay: 1.5s;"></span>
+    <span class="star" style="top:75%; left:30%; animation-delay: 0.8s;"></span>
+    <span class="star" style="top:85%; left:60%; animation-delay: 1.8s;"></span>
+    <span class="star" style="top:95%; left:25%; animation-delay: 0.3s;"></span>
+    <!-- You can copy and paste more with different `top`, `left`, and `animation-delay` values -->
+  </div>
+  
 </body>
 </html>
